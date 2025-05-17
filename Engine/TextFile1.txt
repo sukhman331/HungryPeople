@@ -1,0 +1,43 @@
+﻿bool gameRunning = true;
+Timer cookTimer = new Timer(5f);
+Timer burnTimer = new Timer(3f);
+
+void Start()
+{
+    cookTimer.OnTimerFinished += () =>
+    {
+        Console.WriteLine("Cooking done!");
+        burnTimer.Start();
+    };
+
+    burnTimer.OnTimerFinished += () =>
+    {
+        Console.WriteLine("Food burnt!");
+    };
+
+    cookTimer.Start();
+}
+
+void GameLoop()
+{
+    Start();
+
+    var stopwatch = new System.Diagnostics.Stopwatch();
+    stopwatch.Start();
+
+    while (gameRunning)
+    {
+        float deltaTime = (float)stopwatch.Elapsed.TotalSeconds;
+        stopwatch.Restart();
+
+        Update(deltaTime); // ← THIS is where your Update is used
+
+        System.Threading.Thread.Sleep(16); // Simulate ~60 FPS
+    }
+}
+
+void Update(float deltaTime)
+{
+    cookTimer.Update(deltaTime);
+    burnTimer.Update(deltaTime);
+}
